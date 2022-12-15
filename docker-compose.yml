@@ -1,0 +1,47 @@
+version: '3.4'
+services:
+    web:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        container_name: "phr_backend"
+        depends_on:
+            - mysql
+        networks:
+            - default
+        links:
+            - mysql
+        volumes:
+            - .:/var/www/html
+            - ~/.ssh:/root/.ssh
+        ports:
+            - "9999:80"
+    
+    adminer:
+        image: "adminer"
+        container_name: "phr_adminer"
+        ports:
+            - "9998:8080"
+        depends_on:
+            -   mysql
+        links:
+            - mysql
+    mysql:
+        image: mysql
+        # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+        # (this is just an example, not intended to be a production configuration)
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        container_name: "phr_mysql"
+        ports:
+            - "3306"
+        networks:
+            - default
+        volumes:
+            - .docker/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+        env_file:
+            -   .env
+        environment:
+            MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+            MYSQL_DATABASE: "${MYSQL_DATABASE}"
+            MYSQL_ROOT_HOST: "%"
