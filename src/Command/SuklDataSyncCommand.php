@@ -31,7 +31,7 @@ class SuklDataSyncCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
 		try {
-//			$this->zipFile->load();
+			$this->zipFile->load();
 			$this->csvSyncer->sync();
 
 			$io->success("Data loaded successfully (duration: " . (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) . "s).");

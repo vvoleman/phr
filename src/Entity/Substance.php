@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SubstanceRepository::class)]
-class Substance
+class Substance implements ISerializable
 {
     #[ORM\Id]
     #[ORM\Column]
@@ -149,4 +149,18 @@ class Substance
 
         return $this;
     }
+
+	public function serialize(): array
+	{
+		return [
+			'id' => $this->id,
+			'name' => [
+				'inn' => $this->nameInn,
+				'en' => $this->nameEn,
+				'cs' => $this->name,
+			],
+			'addiction' => $this->addiction?->getName(),
+			'doping' => $this->doping?->getName(),
+		];
+	}
 }

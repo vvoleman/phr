@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ab849274-175f-4a0b-92b8-be50f661b9fc" name="Changes" comment="" />
+    <list default="true" id="ab849274-175f-4a0b-92b8-be50f661b9fc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/public/.htaccess" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/Api/MedicalProductController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Entity/ISerializable.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Exception/MissingParameterException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/AbstractFilter.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/Direction.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/IFilterModifier.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/MedicalProductFilter.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/OrderBy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/OrderFilterModifier.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/PaginatorFilterModifier.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/SearchFilterModifier.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/Version20221215210210.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/SuklDataSyncCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SuklDataSyncCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/MedicalProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MedicalProduct.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Substance.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Substance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/MedicalProductSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/MedicalProductSyncer.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +35,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -97,22 +124,15 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;com.jetbrains.php.lang.actions.generation.PhpGenerateFieldAccessorHandlerBase$MyMemberChooser.fluent.setters.last.selected&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/vvoleman/PHR/docker&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;NONE&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -125,11 +145,23 @@
       <workItem from="1670936516317" duration="9050000" />
       <workItem from="1671025198886" duration="14230000" />
       <workItem from="1671128338953" duration="9932000" />
+      <workItem from="1671281961934" duration="8497000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

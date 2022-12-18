@@ -8,14 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MedicalProductRepository::class)]
-class MedicalProduct
+class MedicalProduct implements ISerializable
 {
     #[ORM\Id]
     #[ORM\Column]
     private ?string $id = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $suklCode = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -69,7 +66,7 @@ class MedicalProduct
     private ?int $expirationHours = null;
 
     #[ORM\OneToOne(inversedBy: 'medicalProduct', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?ProductDocument $document = null;
 
     public function __construct()
@@ -315,4 +312,25 @@ class MedicalProduct
 
         return $this;
     }
+
+	public function serialize(): array
+	{
+		$substances = [];
+		foreach ($this->getSubstances() as $substance) {
+			$substances[] = $substance->serialize();
+		}
+
+		return [
+			'id' => $this->id,
+			'name' => $this->name,
+			'strength' => $this->strength,
+			'packaging' => $this->packaging,
+			'addition' => $this->addition,
+			'registrationHolder' => $this->registrationHolder,
+			'recentlyDelivered' => $this->recentlyDelivered,
+			'expirationHours' => $this->expirationHours,
+			'country' => $this->countryHolder->getName(),
+			'substances' => $substances,
+		];
+	}
 }

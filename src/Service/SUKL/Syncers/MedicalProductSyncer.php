@@ -11,6 +11,7 @@ use App\Entity\MedicalProduct;
 use App\Entity\ProductDocument;
 use App\Entity\ProductForm;
 use App\Entity\RegistrationStatus;
+use App\Entity\Substance;
 use App\Entity\Wrapping;
 use Doctrine\ORM\EntityRepository;
 
@@ -113,7 +114,22 @@ class MedicalProductSyncer extends AbstractSyncer
 		if ($document !== null) {
 			/** @var ProductDocument $document */
 			$medicalProduct->setDocument($document);
+		} else {
+//			$this->logger->warning(sprintf('Document for medical product %s not found', $row['KOD_SUKL']));
 		}
+
+
+		if ($row['LL'] !== null && $row['LL'] !== '') {
+			$substanceIds = explode(',', $row['LL'] ?? '');
+			foreach ($substanceIds as $substanceId) {
+				$substance = $this->getEntity(Substance::class, $substanceId);
+				if ($substance !== null) {
+					/** @var Substance $substance */
+					$medicalProduct->addSubstance($substance);
+				}
+			}
+		}
+
 	}
 
 	protected function getFilename(): string
