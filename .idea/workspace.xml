@@ -5,24 +5,50 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab849274-175f-4a0b-92b8-be50f661b9fc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/.htaccess" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Controller/Api/MedicalProductController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Entity/ISerializable.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Exception/MissingParameterException.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/AbstractFilter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/Direction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/IFilterModifier.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/MedicalProductFilter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/OrderBy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/OrderFilterModifier.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/PaginatorFilterModifier.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Service/Filter/MedicalProduct/SearchFilterModifier.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/Api/DiagnoseController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Repository/UZIS/EventPlaceRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/AbstractSyncer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/CsvSyncer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/LoadZipFile.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/SUKL/LoadSUKLFile.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/UZIS/LoadUZISFile.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/UZIS/Syncers/DiagnoseGroupSyncer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/UZIS/Syncers/DiagnoseSyncer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Service/UZIS/UZISCsvSyncer.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/Version20221215210210.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Command/SuklDataSyncCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SuklDataSyncCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/MedicalProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MedicalProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Substance.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Substance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Api/MedicalProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Api/MedicalProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/AddictionRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/AddictionRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/AdministrationMethodRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/AdministrationMethodRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/CountryRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CountryRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/DispensingRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/DispensingRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/DopingRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/DopingRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IndicationGroupRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndicationGroupRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ProductDocumentRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ProductDocumentRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ProductFormRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ProductFormRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/RegistrationStatusRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RegistrationStatusRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/SourceRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/SourceRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/SubstanceRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/SubstanceRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/UnitRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/UnitRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/WrappingRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/WrappingRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/CsvSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/SUKLCsvSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/LoadZipFile.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/AbstractSyncer.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/AddictionSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/AddictionSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/AdministrationMethodSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/AdministrationMethodSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/CountrySyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/CountrySyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/DependencySorter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/DependencySorter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/DispensingSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/DispensingSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/DopingSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/DopingSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/IndicationGroupSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/IndicationGroupSyncer.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/MedicalProductSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/MedicalProductSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/ProductDocumentSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/ProductDocumentSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/ProductFormSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/ProductFormSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/RegistrationStatusSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/RegistrationStatusSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/SourceSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/SourceSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/SubstanceSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/SubstanceSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/UnitSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/UnitSyncer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/SUKL/Syncers/WrappingSyncer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/SUKL/Syncers/WrappingSyncer.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,6 +159,11 @@
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu\home\themulti\phr\src\Service" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -146,6 +177,9 @@
       <workItem from="1671025198886" duration="14230000" />
       <workItem from="1671128338953" duration="9932000" />
       <workItem from="1671281961934" duration="8497000" />
+      <workItem from="1673974275480" duration="6858000" />
+      <workItem from="1673986104034" duration="4826000" />
+      <workItem from="1674029971826" duration="599000" />
     </task>
     <servers />
   </component>
@@ -162,6 +196,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

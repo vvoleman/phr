@@ -3,6 +3,7 @@
 namespace App\Service\SUKL\Syncers;
 
 use App\Entity\Doping;
+use App\Service\AbstractSyncer;
 use Doctrine\ORM\EntityRepository;
 
 class DopingSyncer extends AbstractSyncer

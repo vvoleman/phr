@@ -6,6 +6,7 @@ use App\Entity\Addiction;
 use App\Entity\Doping;
 use App\Entity\Source;
 use App\Entity\Substance;
+use App\Service\AbstractSyncer;
 use Doctrine\ORM\EntityRepository;
 
 class SubstanceSyncer extends AbstractSyncer

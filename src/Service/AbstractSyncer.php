@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\SUKL\Syncers;
+namespace App\Service;
 
 use App\Service\SUKL\Exception\SuklException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,11 +11,10 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractSyncer
 {
 
-	private static string $csvPath = __DIR__ . '/../../../../var/data/sukl/extracted';
-
 	public function __construct(
 		protected readonly EntityManagerInterface $entityManager,
-		protected readonly LoggerInterface $logger
+		protected readonly LoggerInterface $logger,
+		protected readonly string $csvPath,
 	)
 	{
 	}
@@ -84,7 +83,7 @@ abstract class AbstractSyncer
 	 */
 	protected function getFileData(): iterable
 	{
-		$filePath = self::$csvPath . '/' . $this->getFilename();
+		$filePath = $this->csvPath . '/' . $this->getFilename();
 
 		if (!file_exists($filePath)) {
 			$syncer = static::class;
@@ -110,16 +109,6 @@ abstract class AbstractSyncer
 		foreach ($records as $record) {
 			yield $record;
 		}
-	}
-
-	public static function getCsvPath(): string
-	{
-		return self::$csvPath;
-	}
-
-	public static function setCsvPath(string $csvPath): void
-	{
-		self::$csvPath = $csvPath;
 	}
 
 }

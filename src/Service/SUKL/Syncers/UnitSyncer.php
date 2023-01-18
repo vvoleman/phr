@@ -3,6 +3,7 @@
 namespace App\Service\SUKL\Syncers;
 
 use App\Entity\Unit;
+use App\Service\AbstractSyncer;
 use Doctrine\ORM\EntityRepository;
 
 class UnitSyncer extends AbstractSyncer

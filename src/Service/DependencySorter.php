@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\SUKL\Syncers;
+namespace App\Service;
 
 class DependencySorter
 {

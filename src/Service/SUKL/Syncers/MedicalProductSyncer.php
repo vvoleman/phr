@@ -13,6 +13,7 @@ use App\Entity\ProductForm;
 use App\Entity\RegistrationStatus;
 use App\Entity\Substance;
 use App\Entity\Wrapping;
+use App\Service\AbstractSyncer;
 use Doctrine\ORM\EntityRepository;
 
 class MedicalProductSyncer extends AbstractSyncer

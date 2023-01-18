@@ -1,30 +1,30 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Service\SUKL;
 
-use App\Service\SUKL\Syncers\AbstractSyncer;
-use App\Service\SUKL\Syncers\AddictionSyncer;
-use App\Service\SUKL\Syncers\DependencySorter;
-use App\Service\SUKL\Syncers\DopingSyncer;
-use App\Service\SUKL\Syncers\MedicalProductSyncer;
-use App\Service\SUKL\Syncers\SubstanceSyncer;
+namespace App\Service;
+
 use App\Service\Util\LoggerTrait;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CsvSyncer
+abstract class CsvSyncer
 {
 
 	use LoggerTrait;
 
 	public function __construct(private readonly EntityManagerInterface $entityManager) { }
 
+	/**
+	 * @return array<AbstractSyncer>
+	 */
+	protected abstract function getSyncers(): array;
+
+	protected abstract function getCsvPath(): string;
+
 	public function sync(): void
 	{
 		/** @var array<AbstractSyncer> $syncers */
-		$syncers = [
-			SubstanceSyncer::class,
-			MedicalProductSyncer::class,
-		];
+		$syncers = 	$this->getSyncers();
 
 		// Sort the syncers by their dependencies. This is necessary because some syncers depend on other syncers
 		$sorter = new DependencySorter();
@@ -33,7 +33,7 @@ class CsvSyncer
 		// Now we can sync the data
 		$logger = $this->getLogger();
 		foreach ($sortedSyncers as $className) {
-			$syncer = new $className($this->entityManager, $logger);
+			$syncer = new $className($this->entityManager, $logger, $this->getCsvPath());
 			$syncer->sync();
 			$this->entityManager->flush();
 			$this->entityManager->clear();
