@@ -20,7 +20,7 @@ class SearchFilterModifier implements IFilterModifier
 	public function process(QueryBuilder $builder): QueryBuilder
 	{
 		// search by name or addition
-		$builder->andWhere("mp.name LIKE :search OR mp.addition LIKE :search");
+		$builder->andWhere("mp.name LIKE :search OR mp.addition LIKE :search OR mp.id LIKE :search");
 		$builder->setParameter("search", "%{$this->search}%");
 
 		return $builder;
