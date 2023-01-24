@@ -21,7 +21,7 @@ class DiagnoseRepository extends ServiceEntityRepository
         parent::__construct($registry, Diagnose::class);
     }
 
-	public function search(string $query, int $page, int $amount = 10): array
+	public function search(string $query, int $page, string $orderBy, string $direction, int $amount = 10): array
 	{
 		// Get diagnoses where id or name is like query
 		// Paginate
@@ -29,6 +29,7 @@ class DiagnoseRepository extends ServiceEntityRepository
 		return $this->createQueryBuilder('d')
 			->where('d.id LIKE :query')
 			->orWhere('d.name LIKE :query')
+			->orderBy('d.'.$orderBy, $direction)
 			->setParameter('query', '%' . $query . '%')
 			->setFirstResult($page * $amount)
 			->setMaxResults($amount)
