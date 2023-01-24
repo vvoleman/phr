@@ -20,17 +20,29 @@ class DiagnoseController extends BaseApiController
 	{
 		try {
 			$params = $this->getParams([
-				"page" => true,
+				"page" => false,
 				"search" => true,
+				"sortBy" => false,
+				"direction" => false
 			]);
 		} catch (MissingParameterException) {
 			return $this->error("Missing parameters");
 		}
 
-		$page = (int)$params["page"];
+		$direction = match ($params["direction"] ?? null) {
+			"desc" => "desc",
+			default => "asc"
+		};
+
+		$sortBy = match ($params['sortBy'] ?? null) {
+			"id" => "id",
+			default => "name"
+		};
+
+		$page = (int)($params["page"] ?? 0);
 		$search = $params["search"];
 
-		$diagnoses = $repository->search($search, $page);
+		$diagnoses = $repository->search($search, $page, $sortBy, $direction);
 		$mapped = array_map(function ($diagnose) {
 			return [
 				"id" => $diagnose->getId(),
