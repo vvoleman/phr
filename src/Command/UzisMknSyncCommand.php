@@ -21,7 +21,6 @@ class UzisMknSyncCommand extends Command
 {
 	public function __construct(private readonly LoadUZISFile $zipFile, private readonly UZISCsvSyncer $csvSyncer) { parent::__construct(); }
 
-
 	protected function configure(): void
     {
     }

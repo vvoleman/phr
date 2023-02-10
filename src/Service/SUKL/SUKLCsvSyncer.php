@@ -9,7 +9,7 @@ use App\Service\SUKL\Syncers\SubstanceSyncer;
 class SUKLCsvSyncer extends CsvSyncer
 {
 
-	protected const CSV_PATH = __DIR__ . '/../../../var/data/sukl';
+	protected const CSV_PATH = __DIR__ . '/../../../var/data/sukl/extracted';
 
 	protected function getSyncers(): array
 	{

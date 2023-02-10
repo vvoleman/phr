@@ -7,6 +7,7 @@ namespace App\Controller\Api;
 use App\Controller\BaseApiController;
 use App\Exception\MissingParameterException;
 use App\Repository\UZIS\DiagnoseRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,5 +44,21 @@ class DiagnoseController extends BaseApiController
 
 		return $this->send($mapped);
 	}
+
+    #[Route('/random', name:'_random')]
+    public function random(EntityManagerInterface $manager): JsonResponse
+    {
+        $limit = 1000;
+
+        $sql = "SELECT id, name FROM diagnose ORDER BY RAND() LIMIT $limit";
+        $results = $manager->getConnection()->fetchAllAssociative($sql);
+
+        $data = [];
+        foreach ($results as $result) {
+            $data[$result["id"]] = $result["name"];
+        }
+
+        return new JsonResponse($data);
+    }
 
 }
