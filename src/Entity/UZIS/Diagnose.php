@@ -53,4 +53,16 @@ class Diagnose
 
         return $this;
     }
+
+	public function toArray(): array
+	{
+		return [
+			"id" => $this->getId(),
+			"name" => $this->getName(),
+			"parent" => [
+				"id" => $this->getParent()->getId(),
+				"name" => $this->getParent()->getName(),
+			]
+		];
+	}
 }

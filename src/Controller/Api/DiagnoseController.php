@@ -44,14 +44,32 @@ class DiagnoseController extends BaseApiController
 
 		$diagnoses = $repository->search($search, $page, $sortBy, $direction);
 		$mapped = array_map(function ($diagnose) {
-			return [
-				"id" => $diagnose->getId(),
-				"name" => $diagnose->getName(),
-				"parent" => [
-					"id" => $diagnose->getParent()->getId(),
-					"name" => $diagnose->getParent()->getName(),
-				]
-			];
+			return $diagnose->toArray();
+		}, $diagnoses);
+
+		return $this->send($mapped);
+	}
+
+	#[Route('/multiple', name: '_multiple')]
+	public function multiple(DiagnoseRepository $repository): JsonResponse {
+		try {
+			$params = $this->getParams([
+				"ids" => true,
+			]);
+		} catch (MissingParameterException) {
+			return $this->error("Missing parameters");
+		}
+
+		if (!is_array($params["ids"])) {
+			return $this->error("Parameter 'ids' must be an array");
+		}
+
+		$ids = $params["ids"];
+
+		$diagnoses = $repository->getByIds($ids);
+
+		$mapped = array_map(function ($diagnose) {
+			return $diagnose->toArray();
 		}, $diagnoses);
 
 		return $this->send($mapped);
