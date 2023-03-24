@@ -16,10 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DiagnoseRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Diagnose::class);
-    }
+	public function __construct(ManagerRegistry $registry)
+	{
+		parent::__construct($registry, Diagnose::class);
+	}
 
 	public function search(string $query, int $page, string $orderBy, string $direction, int $amount = 10): array
 	{
@@ -29,7 +29,7 @@ class DiagnoseRepository extends ServiceEntityRepository
 		return $this->createQueryBuilder('d')
 			->where('d.id LIKE :query')
 			->orWhere('d.name LIKE :query')
-			->orderBy('d.'.$orderBy, $direction)
+			->orderBy('d.' . $orderBy, $direction)
 			->setParameter('query', '%' . $query . '%')
 			->setFirstResult($page * $amount)
 			->setMaxResults($amount)
@@ -37,23 +37,32 @@ class DiagnoseRepository extends ServiceEntityRepository
 			->getResult();
 	}
 
-    public function save(Diagnose $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
+	public function getByIds(array $ids): array
+	{
+		return $this->createQueryBuilder('d')
+			->where('d.id IN (:ids)')
+			->setParameter('ids', $ids)
+			->getQuery()
+			->getResult();
+	}
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+	public function save(Diagnose $entity, bool $flush = false): void
+	{
+		$this->getEntityManager()->persist($entity);
 
-    public function remove(Diagnose $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
+		if ($flush) {
+			$this->getEntityManager()->flush();
+		}
+	}
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+	public function remove(Diagnose $entity, bool $flush = false): void
+	{
+		$this->getEntityManager()->remove($entity);
+
+		if ($flush) {
+			$this->getEntityManager()->flush();
+		}
+	}
 
 //    /**
 //     * @return Diagnose[] Returns an array of Diagnose objects
