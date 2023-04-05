@@ -137,4 +137,12 @@ class ProductForm
 
         return $this;
     }
+
+	public function serialize(): array
+	{
+		return [
+			'id' => $this->id,
+			'name' => $this->name,
+		];
+	}
 }
