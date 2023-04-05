@@ -317,14 +317,21 @@ class MedicalProduct implements ISerializable
 	{
 		$substances = [];
 		foreach ($this->getSubstances() as $substance) {
-			$substances[] = $substance->serialize();
+			$substances[] = [
+				'id' => $substance->getId(),
+				'name' => $substance->getName(),
+				'strength' => $this->strength,
+			];
 		}
 
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
 			'strength' => $this->strength,
-			'packaging' => $this->packaging,
+			'packaging' => [
+				'form' => $this->form->serialize(),
+				'packaging' => $this->packaging,
+			],
 			'addition' => $this->addition,
 			'registrationHolder' => $this->registrationHolder,
 			'recentlyDelivered' => $this->recentlyDelivered,
@@ -332,5 +339,31 @@ class MedicalProduct implements ISerializable
 			'country' => $this->countryHolder->getName(),
 			'substances' => $substances,
 		];
+	}
+
+	private function getSubstanceAmount() {
+		$strengths = explode('/', $this->strength);
+		return array_map(function ($strength) {
+			return [
+				$strength => $this->id
+				];
+		}, $strengths);
+	}
+
+	private function getUnit($strength) {
+		$strength = str_replace(',', '.', $strength);
+		preg_match('/^([\d\.]+)(\w+)$/', $strength, $matches);
+
+		if (count($matches) !== 3) {
+			return null;
+		}
+		$value = floatval($matches[1]); // Convert the matched value to float
+		$unit = $matches[2];
+
+		return [
+			'value' => $value,
+			'unit' => $unit,
+		];
+		//split into number and unit
 	}
 }
