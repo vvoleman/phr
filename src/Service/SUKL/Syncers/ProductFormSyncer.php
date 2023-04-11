@@ -35,7 +35,7 @@ class ProductFormSyncer extends AbstractSyncer
 		$form->setNameEn($row['NAZEV_EN']);
 		$form->setNameLat($row['NAZEV_LAT']);
 		$form->setIsCannabis($row['JE_KONOPI'] === 'A');
-		$form->setEdqmCode($row['EDQM_KOD']);
+		$form->setEdqmCode($row['KOD_EDQM']);
 		$form->setShortName($this->getShortenName($row['FORMA']));
 		$this->entityManager->persist($form);
 	}
