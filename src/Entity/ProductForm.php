@@ -32,16 +32,19 @@ class ProductForm
     #[ORM\OneToMany(mappedBy: 'form', targetEntity: MedicalProduct::class)]
     private Collection $medicalProducts;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shortName = null;
+
     public function __construct()
     {
         $this->medicalProducts = new ArrayCollection();
     }
 
 	public function setId(string $id): self
-	{
-		$this->id = $id;
-		return $this;
-	}
+         	{
+         		$this->id = $id;
+         		return $this;
+         	}
 
     public function getId(): ?int
     {
@@ -139,10 +142,23 @@ class ProductForm
     }
 
 	public function serialize(): array
-	{
-		return [
-			'id' => $this->id,
-			'name' => $this->name,
-		];
-	}
+         	{
+         		return [
+         			'id' => $this->id,
+         			'name' => $this->name,
+					'short_name' => $this->shortName
+         		];
+         	}
+
+    public function getShortName(): ?string
+    {
+        return $this->shortName;
+    }
+
+    public function setShortName(string|null $shortName): self
+    {
+        $this->shortName = $shortName;
+
+        return $this;
+    }
 }
