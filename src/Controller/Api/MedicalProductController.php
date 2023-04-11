@@ -6,12 +6,14 @@ namespace App\Controller\Api;
 use App\Controller\BaseApiController;
 use App\Entity\MedicalProduct;
 use App\Exception\MissingParameterException;
+use App\Repository\MedicalProductRepository;
 use App\Service\Filter\Direction;
 use App\Service\Filter\MedicalProduct\MedicalProductFilter;
 use App\Service\Filter\MedicalProduct\OrderBy;
 use App\Service\Filter\MedicalProduct\OrderFilterModifier;
 use App\Service\Filter\MedicalProduct\PaginatorFilterModifier;
 use App\Service\Filter\MedicalProduct\SearchFilterModifier;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -65,6 +67,19 @@ class MedicalProductController extends BaseApiController
 		$products = $filter->run();
 		$products = array_map(fn(MedicalProduct $product) => $product->serialize(), $products);
 
+		return $this->send($products);
+	}
+
+	#[Route('/random', name: 'get')]
+	public function random(EntityManagerInterface $manager): JsonResponse
+	{
+		$sql = "SELECT id FROM medical_product ORDER BY RAND() LIMIT 50";
+		$ids = $manager->getConnection()->fetchAllAssociative($sql);
+		$ids = array_map(fn(array $id) => $id["id"], $ids);
+
+		$products = $manager->getRepository(MedicalProduct::class)->findBy(["id" => $ids]);
+
+		$products = array_map(fn(MedicalProduct $product) => $product->serialize(), $products);
 		return $this->send($products);
 	}
 
