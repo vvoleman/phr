@@ -69,6 +69,12 @@ class MedicalProductSyncer extends AbstractSyncer
 			$medicalProduct->setDoping($doping);
 		}
 
+		$form = $this->getEntity(ProductForm::class, $row['FORMA']);
+		if ($form !== null) {
+			/** @var ProductForm $form */
+			$medicalProduct->setForm($form);
+		}
+
 		$status = $this->getEntity(RegistrationStatus::class, $row['REG']);
 		if ($status !== null) {
 			/** @var RegistrationStatus $status */
