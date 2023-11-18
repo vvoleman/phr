@@ -13,16 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.8.0
+      - name: Deploy to remote server
+        uses: appleboy/ssh-action@v0.1.10
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Pull latest changes on VPS
-        run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'cd ${{ secrets.PATH }} && git pull origin deploy'
-
-      - name: Restart Docker containers
-        run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'sudo docker-compose -f ${{ secrets.PATH }}/docker-compose.yml down'
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'sudo docker-compose -f ${{ secrets.PATH }}/docker-compose.yml up --build -d'
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: ./deploy.sh
