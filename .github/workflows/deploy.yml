@@ -1,0 +1,23 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - deploy  # Change this to your main branch name if different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Pull latest changes on VPS
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'cd ${{ secrets.PATH }} && git pull origin deploy'
+
+      - name: Restart Docker containers
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'sudo docker-compose -f ${{ secrets.PATH }}/docker-compose.yml down'
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'sudo docker-compose -f ${{ secrets.PATH }}/docker-compose.yml up --build -d'
