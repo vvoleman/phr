@@ -19,4 +19,4 @@ jobs:
           host: ${{ secrets.VPS_IP }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: ./deploy.sh
+          script: ./deploy-phr.sh
