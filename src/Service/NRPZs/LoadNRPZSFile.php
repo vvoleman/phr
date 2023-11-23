@@ -8,28 +8,21 @@ use Symfony\Component\DomCrawler\Crawler;
 class LoadNRPZSFile extends LoadCsvFile
 {
 
-	protected function getLinkWithCrawler(Crawler $crawler): string
-	{
-		// TODO: Implement getLinkWithCrawler() method.
-	}
+	private const URL = 'https://nrpzs.uzis.cz/res/file/export/export-sluzby-%s-%s.csv';
+	private const STORAGE_DIR = __DIR__ . '/../../../var/data/nrpzs';
+
 
 	protected function getStorageFolder(): string
 	{
-		// TODO: Implement getStorageFolder() method.
-	}
-
-	protected function keepZipFiles(): bool
-	{
-		// TODO: Implement keepZipFiles() method.
+		return self::STORAGE_DIR;
 	}
 
 	protected function getSourceUrl(): string
 	{
-		// TODO: Implement getSourceUrl() method.
-	}
+		$today = new \DateTimeImmutable();
+		$year = $today->format('Y');
+		$month = $today->format('m');
 
-	protected function isUsingCrawler(): bool
-	{
-		// TODO: Implement isUsingCrawler() method.
+		return sprintf(self::URL, $year, $month);
 	}
 }

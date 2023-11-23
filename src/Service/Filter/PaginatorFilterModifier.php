@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-
-namespace App\Service\Filter\MedicalProduct;
+namespace App\Service\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 
-class PaginatorFilterModifier implements \App\Service\Filter\IFilterModifier
+class PaginatorFilterModifier implements IFilterModifier
 {
 
 	public const LIMIT = 10;

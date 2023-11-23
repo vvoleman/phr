@@ -2,7 +2,7 @@
 
 namespace App\Service\SUKL;
 
-use App\Service\LoadZipFile;
+use App\Service\File\LoadZipFile;
 use App\Service\SUKL\Exception\SuklException;
 use App\Service\Util\LoggerTrait;
 use Symfony\Component\DomCrawler\Crawler;

@@ -7,7 +7,7 @@ namespace App\Service\UZIS;
 use App\Service\SUKL\Exception\SuklException;
 use Symfony\Component\DomCrawler\Crawler;
 
-class LoadUZISFile extends \App\Service\LoadZipFile
+class LoadUZISFile extends \App\Service\File\LoadZipFile
 {
 
 	private const URL = 'https://www.uzis.cz/index.php?pg=vystupy--knihovna&id=3371';
