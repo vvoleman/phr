@@ -49,7 +49,7 @@ abstract class AbstractSyncer
 		$repository = $this->getRepository();
 
 		$i = 0;
-		$maxRecords = 5000;
+		$maxRecords = 500;
 		foreach ($data as $item) {
 			$this->handleRow($item, $repository);
 			$i++;
@@ -109,6 +109,11 @@ abstract class AbstractSyncer
 		foreach ($records as $record) {
 			yield $record;
 		}
+	}
+
+	protected function logMemory() {
+		$memory = number_format(memory_get_usage() / 1024 / 1024, 2);
+		$this->logger->info("Memory: {$memory}MB");
 	}
 
 }
