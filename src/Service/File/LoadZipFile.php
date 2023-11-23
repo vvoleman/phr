@@ -2,9 +2,8 @@
 declare(strict_types=1);
 
 
-namespace App\Service;
+namespace App\Service\File;
 
-use App\Service\File\FileDownloader;
 use App\Service\SUKL\Exception\SuklException;
 use App\Service\Util\LoggerTrait;
 use Symfony\Component\DomCrawler\Crawler;
@@ -58,7 +57,7 @@ abstract class LoadZipFile
 
 		// 4. Download file
 		$date = (new \DateTime())->format('Y-m-d');
-		$path = $this->getStorageFolder().self::STORE_ZIP_DIR . "/sukl_$date.zip";
+		$path = $this->getStorageFolder().self::STORE_ZIP_DIR . "/$date.zip";
 		$result = $this->fileDownloader->downloadFile($url, $path);
 		if (!$result) {
 			$this->getLogger()->error("Unable to download file from '$url' to '$path'.");

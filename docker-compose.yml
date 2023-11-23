@@ -16,7 +16,7 @@ services:
             - ~/.ssh:/root/.ssh
         ports:
             - "9999:80"
-    
+
     adminer:
         image: "adminer"
         container_name: "phr_adminer"
@@ -34,7 +34,7 @@ services:
         restart: always
         container_name: "phr_mysql"
         ports:
-            - "3306"
+            - "3306:3306"
         networks:
             - default
         volumes:
