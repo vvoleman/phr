@@ -14,7 +14,7 @@ class HealthcareService implements ISerializable
 	private string $id;
 
 	#[ORM\Column(name: "care_field", type: "string")]
-	private string $careField;
+	private ?string $careField = null;
 
 	#[ORM\Column(name: "care_form", type: "string")]
 	private ?string $careForm = null;

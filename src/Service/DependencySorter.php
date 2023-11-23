@@ -23,11 +23,6 @@ class DependencySorter
 			}
 		}
 
-		// Print the graph
-		foreach ($graph as $node => $dependencies) {
-			echo "$node: " . implode(', ', $dependencies) . "\n";
-		}
-
 		// Now we can use the topological sort algorithm to sort the syncers
 		$sorted = [];
 		$visited = [];

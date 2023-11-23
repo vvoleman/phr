@@ -3,6 +3,7 @@
 namespace App\Service\NRPZs;
 
 use App\Service\CsvSyncer;
+use App\Service\NRPZs\Syncers\HealthcareFacilitySyncer;
 use App\Service\NRPZs\Syncers\HealthcareServiceSyncer;
 
 class NRPZSCsvSyncer extends CsvSyncer
@@ -16,6 +17,7 @@ class NRPZSCsvSyncer extends CsvSyncer
 	protected function getSyncers(): array
 	{
 		return [
+			HealthcareFacilitySyncer::class,
 			HealthcareServiceSyncer::class,
 		];
 	}
