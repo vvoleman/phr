@@ -12,10 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'sukl:data:sync',
+    name: 'syncer:sukl:run',
     description: 'Sync data from SUKL',
 )]
-class SuklDataSyncCommand extends Command
+class SyncerSuklRunCommand extends Command
 {
 
 	public function __construct(private readonly LoadSUKLFile $zipFile, private readonly SUKLCsvSyncer $csvSyncer) { parent::__construct(); }
