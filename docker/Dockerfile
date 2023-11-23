@@ -21,9 +21,5 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 CMD cron && /usr/sbin/apache2ctl -D FOREGROUND
 
-# Update composer
-COPY composer.json composer.json
-RUN composer update
-
 CMD ./docker/apache-entrypoint.sh
 
