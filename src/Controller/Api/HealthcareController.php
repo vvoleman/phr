@@ -41,11 +41,6 @@ class HealthcareController extends BaseApiController
 		$page = (int)($params["page"] ?? '0');
 		$filter->addModifier(new PaginatorFilterModifier($page));
 
-		$type = $params["type"] ?? SearchBy::ANY;
-		if ($type !== SearchBy::ANY) {
-			$type = SearchBy::tryFromName($type) ?? SearchBy::ANY;
-		}
-
 		$searchFilter = SearchFilterModifier::fromParams($params);
 		if ($searchFilter !== null) {
 			$filter->addModifier($searchFilter);
