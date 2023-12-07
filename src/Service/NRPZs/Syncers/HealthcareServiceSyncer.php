@@ -22,7 +22,9 @@ class HealthcareServiceSyncer extends AbstractSyncer
 	 */
 	protected function handleRow(array $row, EntityRepository $repository): void
 	{
-		$id = $row['ZdravotnickeZarizeniId']. '-' . md5($row['OborPece']);
+
+		$id = hash('sha256',$row['ZdravotnickeZarizeniId'].$row['OborPece']);
+		$id = substr($id, 0, 16);
 		$service = $repository->find($id);
 
 		if ($service === null) {

@@ -139,6 +139,7 @@ class HealthcareService implements ISerializable
 	public function serialize( ): array
 	{
 		return [
+			'id' => $this->id,
 			'careField' => $this->careField,
 			'careForm' => $this->careForm,
 			'careType' => $this->careType,
