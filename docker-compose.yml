@@ -15,7 +15,7 @@ services:
             - .:/var/www/html
             - ~/.ssh:/root/.ssh
         ports:
-            - "9999:80"
+            - "${PUBLIC_PORT}:80"
 
     mysql:
         image: mysql
@@ -25,7 +25,7 @@ services:
         restart: always
         container_name: "phr_mysql"
         ports:
-            - "3306:3306"
+            - "${MYSQL_PUBLIC_PORT}:3306"
         networks:
             - default
 #        volumes:
