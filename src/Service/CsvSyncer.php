@@ -21,6 +21,8 @@ abstract class CsvSyncer
 
 	protected abstract function getCsvPath(): string;
 
+	protected abstract function getEncoding(): string;
+
 	public function sync(): void
 	{
 		/** @var array<AbstractSyncer> $syncers */
@@ -33,7 +35,7 @@ abstract class CsvSyncer
 		// Now we can sync the data
 		$logger = $this->getLogger();
 		foreach ($sortedSyncers as $className) {
-			$syncer = new $className($this->entityManager, $logger, $this->getCsvPath());
+			$syncer = new $className($this->entityManager, $logger, $this->getCsvPath(), $this->getEncoding());
 			$syncer->sync();
 			$this->entityManager->flush();
 			$this->entityManager->clear();

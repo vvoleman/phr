@@ -13,8 +13,9 @@ abstract class AbstractSyncer
 
 	public function __construct(
 		protected readonly EntityManagerInterface $entityManager,
-		protected readonly LoggerInterface $logger,
-		protected readonly string $csvPath,
+		protected readonly LoggerInterface        $logger,
+		protected readonly string                 $csvPath,
+		protected readonly string                 $encoding = 'UTF-8',
 	)
 	{
 	}
@@ -85,17 +86,28 @@ abstract class AbstractSyncer
 	{
 		$filePath = $this->csvPath . '/' . $this->getFilename();
 
-		if (!file_exists($filePath)) {
+		// Filepath can contain wildcard, so we need to find the actual file
+		$files = glob($filePath);
+		if (count($files) === 1) {
+			$filePath = $files[0];
+		} else {
 			$syncer = static::class;
 			$this->logger->error("File '$filePath' not found. File is required to run Syncer $syncer");
 			throw new SuklException("File $filePath does not exist.");
 		}
 
-		$csv = Reader::createFromPath($filePath);
+//		if (!file_exists($filePath)) {
+//			$syncer = static::class;
+//			$this->logger->error("File '$filePath' not found. File is required to run Syncer $syncer");
+//			throw new SuklException("File $filePath does not exist.");
+//		}
 
+		$csv = Reader::createFromPath($filePath);
 		//convert from windows 1250 to utf8
 		try {
-			$csv->addStreamFilter('convert.iconv.windows-1250/utf-8');
+			if ($this->encoding !== 'UTF-8') {
+				$csv->addStreamFilter('convert.iconv.'.$this->encoding.'/utf-8');
+			}
 
 			$csv->setHeaderOffset(0);
 			$csv->setDelimiter(';');
@@ -111,7 +123,8 @@ abstract class AbstractSyncer
 		}
 	}
 
-	protected function logMemory() {
+	protected function logMemory()
+	{
 		$memory = number_format(memory_get_usage() / 1024 / 1024, 2);
 		$this->logger->info("Memory: {$memory}MB");
 	}

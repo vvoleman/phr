@@ -19,6 +19,11 @@ class SUKLCsvSyncer extends CsvSyncer
 		];
 	}
 
+	protected function getEncoding(): string
+	{
+		return 'windows-1250';
+	}
+
 	protected function getCsvPath(): string
 	{
 		return self::CSV_PATH;

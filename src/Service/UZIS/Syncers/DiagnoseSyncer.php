@@ -47,6 +47,6 @@ class DiagnoseSyncer extends \App\Service\AbstractSyncer
 	protected function getFilename(): string
 	{
 		$year = (new \DateTime())->format('Y');
-		return "02_MKN10_${year}_Tabelární ƒást - seznam názvà poloºek_utf8.csv";
+		return "02_MKN10_*.csv";
 	}
 }
