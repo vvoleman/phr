@@ -1,1 +1,1 @@
-0 3 5,20 * * /usr/local/bin/php /var/www/html/bin/console syncer:all:run -e prod >> /var/log/cron.log 2>&1
+0 3 5 * * /usr/local/bin/php /var/www/html/bin/console syncer:all:run -e prod >> /var/log/cron.log 2>&1
