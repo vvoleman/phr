@@ -5,6 +5,7 @@ namespace App\Service\SUKL\Syncers;
 use App\Entity\ProductDocument;
 use App\Service\AbstractSyncer;
 use Doctrine\ORM\EntityRepository;
+use Exception;
 
 class ProductDocumentSyncer extends AbstractSyncer
 {
@@ -19,24 +20,24 @@ class ProductDocumentSyncer extends AbstractSyncer
 	/**
 	 * @inheritDoc
 	 */
-	protected function handleRow(array $row, EntityRepository $repository): void
+	protected function handleRow(array $row, EntityRepository $repository): string
 	{
-		$doc = $repository->find($row['KOD_SUKL']);
+        try {
+            $date = new \DateTime($row['DAT_ROZ_PIL']);
+        } catch (Exception) {
+            $date = null;
+        }
 
-		if ($doc === null) {
-			$doc = new ProductDocument();
-			$doc->setId($row['KOD_SUKL']);
-			$this->entityManager->persist($doc);
-		}
-
-		$doc->setFileName($row['PIL']);
-
-		try {
-			$date = new \DateTime($row['DAT_ROZ_PIL']);
-		} catch (\Exception $e) {
-			$date = null;
-		}
-		$doc->setLeafletDecisionDate($date);
+        return sprintf("
+            INSERT INTO product_document
+            (id, file_name, leaflet_decision_date)
+            values (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE file_name = VALUES(file_name), leaflet_decision_date = VALUES(leaflet_decision_date);
+        ",
+            $this->getOrNull($row['KOD_SUKL'], true),
+            $this->getOrNull($row['PIL'], true),
+            $this->getOrNull($date->format('Y-m-d'))
+        );
 	}
 
 	protected function getFilename(): string

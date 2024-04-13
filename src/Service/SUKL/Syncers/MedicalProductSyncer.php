@@ -2,28 +2,18 @@
 
 namespace App\Service\SUKL\Syncers;
 
-use App\Entity\AdministrationMethod;
-use App\Entity\Country;
-use App\Entity\Dispensing;
-use App\Entity\Doping;
-use App\Entity\IndicationGroup;
 use App\Entity\MedicalProduct;
-use App\Entity\ProductDocument;
-use App\Entity\ProductForm;
-use App\Entity\RegistrationStatus;
-use App\Entity\Substance;
-use App\Entity\Wrapping;
 use App\Service\AbstractSyncer;
 use Doctrine\ORM\EntityRepository;
 
 class MedicalProductSyncer extends AbstractSyncer
 {
 
-	private const FILENAME = 'dlp_lecivepripravky.csv';
+    private const FILENAME = 'dlp_lecivepripravky.csv';
 
-	public static function getDependencies(): array
-	{
-		return [
+    public static function getDependencies(): array
+    {
+        return [
 			AdministrationMethodSyncer::class,
 			CountrySyncer::class,
 			DispensingSyncer::class,
@@ -33,127 +23,60 @@ class MedicalProductSyncer extends AbstractSyncer
 			ProductFormSyncer::class,
 			RegistrationStatusSyncer::class,
 			WrappingSyncer::class,
-		];
-	}
+        ];
+    }
 
 
-	protected function getRepository(): EntityRepository
-	{
-		return $this->entityManager->getRepository(MedicalProduct::class);
-	}
+    protected function getRepository(): EntityRepository
+    {
+        return $this->entityManager->getRepository(MedicalProduct::class);
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function handleRow(array $row, EntityRepository $repository): void
-	{
-		$medicalProduct = $repository->find($row['KOD_SUKL']);
+    /**
+     * @inheritDoc
+     */
+    protected function handleRow(array $row, EntityRepository $repository): string
+    {
+        return sprintf("INSERT INTO medical_product 
+            (id, name, strength, packaging, addition, registration_holder, recently_delivered, expiration_hours, form_id, administration_method_id, wrapping_id, country_holder_id, registration_status_id, indication_group_id, dispensing_id, addiction_id, doping_id, document_id ) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s ) 
+            ON DUPLICATE KEY UPDATE name = VALUES(name), strength = VALUES(strength), packaging = VALUES(packaging), addition = VALUES(addition), registration_holder = VALUES(registration_holder), recently_delivered = VALUES(recently_delivered), expiration_hours = VALUES(expiration_hours), form_id = VALUES(form_id), administration_method_id = VALUES(administration_method_id), wrapping_id = VALUES(wrapping_id), country_holder_id = VALUES(country_holder_id), registration_status_id = VALUES(registration_status_id), indication_group_id = VALUES(indication_group_id), dispensing_id = VALUES(dispensing_id), addiction_id = VALUES(addiction_id), doping_id = VALUES(doping_id), document_id = VALUES(document_id);",
+            $this->getOrNull($row['KOD_SUKL'], true),
+            $this->getOrNull($row['NAZEV'], true),
+            $this->getOrNull($row['SILA'], true),
+            $this->getOrNull($row['BALENI'], true),
+            $this->getOrNull($row['DOPLNEK'], true),
+            $this->getOrNull($row['DRZ'], true),
+            $this->getOrNull($row['DODAVKY'] === '1' ? '1' : '0'),
+            $this->getOrNull($this->getExpirationHours($row['EXP'], $row['EXP_T'])),
+            $this->getOrNull($row['FORMA']),
+            $this->getOrNull($row['CESTA']),
+            $this->getOrNull($row['OBAL']),
+            $this->getOrNull($row['ZEMDRZ']),
+            $this->getOrNull($row['REG']),
+            $this->getOrNull($row['IS_']),
+            $this->getOrNull($row['VYDEJ']),
+            $this->getOrNull($row['ZAV']),
+            $this->getOrNull($row['DOPING']),
+            $this->getOrNull($row['KOD_SUKL'])
+        );
+    }
 
-		if ($medicalProduct === null) {
-			$medicalProduct = new MedicalProduct();
-			$medicalProduct->setId($row['KOD_SUKL']);
-			$this->entityManager->persist($medicalProduct);
-		}
+    protected function getFilename(): string
+    {
+        return self::FILENAME;
+    }
 
-		$medicalProduct->setName($row['NAZEV']);
-		$medicalProduct->setStrength($row['SILA']);
-		$medicalProduct->setPackaging($row['BALENI']);
-		$medicalProduct->setAddition($row['DOPLNEK']);
-		$medicalProduct->setRegistrationHolder($row['DRZ']);
-		$medicalProduct->setRecentlyDelivered($row['DODAVKY'] === '1');
-		$medicalProduct->setExpirationHours($this->getExpirationHours($row['EXP'], $row['EXP_T']));
+    private function getExpirationHours(string $value, string $type): int
+    {
+        $value = (int)$value;
+        $multipliers = [
+            'H' => 1,
+            'D' => 24,
+            'W' => 24 * 7,
+            'M' => 24 * 30,
+        ];
 
-		$doping = $this->getEntity(Doping::class, $row['DOPING']);
-		if ($doping !== null) {
-			/** @var Doping $doping */
-			$medicalProduct->setDoping($doping);
-		}
-
-		$form = $this->getEntity(ProductForm::class, $row['FORMA']);
-		if ($form !== null) {
-			/** @var ProductForm $form */
-			$medicalProduct->setForm($form);
-		}
-
-		$status = $this->getEntity(RegistrationStatus::class, $row['REG']);
-		if ($status !== null) {
-			/** @var RegistrationStatus $status */
-			$medicalProduct->setRegistrationStatus($status);
-		}
-
-		$wrapping = $this->getEntity(Wrapping::class, $row['OBAL']);
-		if ($wrapping !== null) {
-			/** @var Wrapping $wrapping */
-			$medicalProduct->setWrapping($wrapping);
-		}
-
-		$administrationMethod = $this->getEntity(AdministrationMethod::class, $row['CESTA']);
-		if ($administrationMethod !== null) {
-			/** @var AdministrationMethod $administrationMethod */
-			$medicalProduct->setAdministrationMethod($administrationMethod);
-		}
-
-		$productForm = $this->getEntity(ProductForm::class, $row['FORMA']);
-		if ($productForm !== null) {
-			/** @var ProductForm $productForm */
-			$medicalProduct->setForm($productForm);
-		}
-
-		$country = $this->getEntity(Country::class, $row['ZEMDRZ']);
-		if ($country !== null) {
-			/** @var Country $country */
-			$medicalProduct->setCountryHolder($country);
-		}
-
-		$indicationGroup = $this->getEntity(IndicationGroup::class, $row['IS_']);
-		if ($indicationGroup !== null) {
-			/** @var IndicationGroup $indicationGroup */
-			$medicalProduct->setIndicationGroup($indicationGroup);
-		}
-
-		$dispensing = $this->getEntity(Dispensing::class, $row['VYDEJ']);
-		if ($dispensing !== null) {
-			/** @var Dispensing $dispensing */
-			$medicalProduct->setDispensing($dispensing);
-		}
-
-		$document = $this->getEntity(ProductDocument::class, $row['KOD_SUKL']);
-		if ($document !== null) {
-			/** @var ProductDocument $document */
-			$medicalProduct->setDocument($document);
-		} else {
-//			$this->logger->warning(sprintf('Document for medical product %s not found', $row['KOD_SUKL']));
-		}
-
-
-		if ($row['LL'] !== null && $row['LL'] !== '') {
-			$substanceIds = explode(',', $row['LL'] ?? '');
-			foreach ($substanceIds as $substanceId) {
-				$substance = $this->getEntity(Substance::class, $substanceId);
-				if ($substance !== null) {
-					/** @var Substance $substance */
-					$medicalProduct->addSubstance($substance);
-				}
-			}
-		}
-
-	}
-
-	protected function getFilename(): string
-	{
-		return self::FILENAME;
-	}
-
-	private function getExpirationHours(string $value, string $type): int
-	{
-		$value = (int)$value;
-		$multipliers = [
-			'H' => 1,
-			'D' => 24,
-			'W' => 24 * 7,
-			'M' => 24 * 30,
-		];
-
-		return $value * ($multipliers[$type] ?? 1);
-	}
+        return $value * ($multipliers[$type] ?? 1);
+    }
 }

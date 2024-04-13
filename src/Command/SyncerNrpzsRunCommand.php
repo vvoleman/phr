@@ -32,7 +32,7 @@ class SyncerNrpzsRunCommand extends Command
     {
 		$io = new SymfonyStyle($input, $output);
 		try {
-			$this->file->load();
+//			$this->file->load();
 			$this->csvSyncer->sync();
 
 			$io->success("Data loaded successfully (duration: " . (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) . "s).");

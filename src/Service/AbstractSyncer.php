@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Service\SUKL\Exception\SuklException;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use League\Csv\Reader;
@@ -13,9 +14,8 @@ abstract class AbstractSyncer
 
 	public function __construct(
 		protected readonly EntityManagerInterface $entityManager,
-		protected readonly LoggerInterface        $logger,
-		protected readonly string                 $csvPath,
-		protected readonly string                 $encoding = 'UTF-8',
+		protected readonly LoggerInterface $logger,
+		protected readonly string $csvPath,
 	)
 	{
 	}
@@ -38,7 +38,7 @@ abstract class AbstractSyncer
 	/**
 	 * @param array $row
 	 */
-	protected abstract function handleRow(array $row, EntityRepository $repository): void;
+	protected abstract function handleRow(array $row, EntityRepository $repository);
 
 	public function sync(): void
 	{
@@ -50,22 +50,37 @@ abstract class AbstractSyncer
 		$repository = $this->getRepository();
 
 		$i = 0;
-		$maxRecords = 500;
+		$maxRecords = 1000;
+        $batch = [];
 		foreach ($data as $item) {
-			$this->handleRow($item, $repository);
+			$result = $this->handleRow($item, $repository);
+            if ($result !== null) {
+                $batch[] = $result;
+            }
 			$i++;
 
 			if ($i % $maxRecords === 0) {
 				$memory = memory_get_usage();
 				$this->logger->info("$syncerName: $i records processed, memory: $memory");
 
-				$this->entityManager->flush();
-				$this->entityManager->clear();
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+
+                if(count($batch) === 0) {
+                    continue;
+                }
+                $this->submitBatch($batch);
+                $batch = [];
 			}
 		}
 
 		$this->entityManager->flush();
 		$this->entityManager->clear();
+
+        if(count($batch) > 0) {
+            $this->submitBatch($batch);
+        }
+
 		$memory = memory_get_usage();
 		$this->logger->info(
 			"$syncerName finished. Memory: $memory. Processed in " . (microtime(true) - $startTimestamp) . 's'
@@ -103,11 +118,10 @@ abstract class AbstractSyncer
 //		}
 
 		$csv = Reader::createFromPath($filePath);
+
 		//convert from windows 1250 to utf8
 		try {
-			if ($this->encoding !== 'UTF-8') {
-				$csv->addStreamFilter('convert.iconv.'.$this->encoding.'/utf-8');
-			}
+			$csv->addStreamFilter('convert.iconv.windows-1250/utf-8');
 
 			$csv->setHeaderOffset(0);
 			$csv->setDelimiter(';');
@@ -128,5 +142,29 @@ abstract class AbstractSyncer
 		$memory = number_format(memory_get_usage() / 1024 / 1024, 2);
 		$this->logger->info("Memory: {$memory}MB");
 	}
+
+    protected function getOrNull(string $value, bool $forceValue = false): ?string
+    {
+        $value = htmlspecialchars($value, ENT_QUOTES);
+
+        if ($forceValue) {
+            return sprintf("'%s'", $value);
+        }
+
+        return $value === '' ? "null" : sprintf("'%s'", $value);
+    }
+
+    private function submitBatch(array $batch): void
+    {
+        $bigSql = implode('', $batch);
+        try {
+            $this->entityManager->getConnection()->beginTransaction();
+            $this->entityManager->getConnection()->executeStatement($bigSql);
+            $this->entityManager->getConnection()->commit();
+        } catch (Exception $e) {
+            $this->logger->info($bigSql);
+            throw $e;
+        }
+    }
 
 }
