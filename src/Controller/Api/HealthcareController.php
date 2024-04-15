@@ -25,7 +25,6 @@ class HealthcareController extends BaseApiController
 		try {
 			$options = [
 				"page" => false,
-				"type" => false,
 				"search" => false,
 				"order_by" => false,
 				"direction" => false
