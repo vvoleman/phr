@@ -18,7 +18,7 @@ class NRPZSCsvSyncer extends CsvSyncer
 	{
 		return [
 			HealthcareFacilitySyncer::class,
-			HealthcareServiceSyncer::class,
+//			HealthcareServiceSyncer::class,
 		];
 	}
 

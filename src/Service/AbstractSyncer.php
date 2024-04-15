@@ -14,9 +14,10 @@ abstract class AbstractSyncer
 
 	public function __construct(
 		protected readonly EntityManagerInterface $entityManager,
-		protected readonly LoggerInterface $logger,
-		protected readonly string $csvPath,
-	)
+        protected readonly LoggerInterface $logger,
+        protected readonly string $csvPath,
+        protected readonly string $encoding = 'UTF-8',
+    )
 	{
 	}
 
@@ -50,7 +51,7 @@ abstract class AbstractSyncer
 		$repository = $this->getRepository();
 
 		$i = 0;
-		$maxRecords = 1000;
+		$maxRecords = 100;
         $batch = [];
 		foreach ($data as $item) {
 			$result = $this->handleRow($item, $repository);
@@ -121,9 +122,11 @@ abstract class AbstractSyncer
 
 		//convert from windows 1250 to utf8
 		try {
-			$csv->addStreamFilter('convert.iconv.windows-1250/utf-8');
+            if ($this->encoding !== 'UTF-8') {
+                $csv->addStreamFilter('convert.iconv.'.$this->encoding.'/utf-8');
+            }
 
-			$csv->setHeaderOffset(0);
+            $csv->setHeaderOffset(0);
 			$csv->setDelimiter(';');
 		} catch (\Exception $e) {
 			$this->logger->error($e->getMessage());

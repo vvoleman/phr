@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DiagnoseController extends BaseApiController
 {
 
-	#[Route('/', name: '_search')]
+	#[Route('/list', name: '_search')]
 	public function index(DiagnoseRepository $repository): JsonResponse
 	{
 		try {
