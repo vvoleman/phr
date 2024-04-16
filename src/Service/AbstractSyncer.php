@@ -14,10 +14,10 @@ abstract class AbstractSyncer
 
 	public function __construct(
 		protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger,
-        protected readonly string $csvPath,
-        protected readonly string $encoding = 'UTF-8',
-    )
+		protected readonly LoggerInterface        $logger,
+		protected readonly string                 $csvPath,
+		protected readonly string                 $encoding = 'UTF-8',
+	)
 	{
 	}
 
@@ -51,38 +51,42 @@ abstract class AbstractSyncer
 		$repository = $this->getRepository();
 
 		$i = 0;
-		$maxRecords = 100;
-        $batch = [];
+		$maxRecords = $_ENV["BATCH_SIZE"] ?? 1;
+		$this->logger->info("Batch size: $maxRecords");
+		$batch = [];
 		foreach ($data as $item) {
 			$result = $this->handleRow($item, $repository);
-            if ($result !== null) {
-                $batch[] = $result;
-            }
+			if ($result !== null) {
+				$batch[] = $result;
+			}
+			unset($result);
 			$i++;
 
 			if ($i % $maxRecords === 0) {
-				$memory = memory_get_usage();
-				$this->logger->info("$syncerName: $i records processed, memory: $memory");
+				$memory = $this->logMemory();
+				CsvSyncer::setTopMemory($memory);
+				$this->logger->info("$syncerName: $i records processed, memory: $memory. Batch size: " . count($batch));
 
-                $this->entityManager->flush();
-                $this->entityManager->clear();
+				$this->entityManager->flush();
+				$this->entityManager->clear();
 
-                if(count($batch) === 0) {
-                    continue;
-                }
-                $this->submitBatch($batch);
-                $batch = [];
+				if (count($batch) === 0) {
+					continue;
+				}
+				$this->submitBatch($batch);
+				$batch = [];
 			}
 		}
 
 		$this->entityManager->flush();
 		$this->entityManager->clear();
 
-        if(count($batch) > 0) {
-            $this->submitBatch($batch);
-        }
+		if (count($batch) > 0) {
+			$this->submitBatch($batch);
+		}
 
-		$memory = memory_get_usage();
+		$memory = $this->logMemory();
+		CsvSyncer::setTopMemory($memory);
 		$this->logger->info(
 			"$syncerName finished. Memory: $memory. Processed in " . (microtime(true) - $startTimestamp) . 's'
 		);
@@ -122,11 +126,11 @@ abstract class AbstractSyncer
 
 		//convert from windows 1250 to utf8
 		try {
-            if ($this->encoding !== 'UTF-8') {
-                $csv->addStreamFilter('convert.iconv.'.$this->encoding.'/utf-8');
-            }
+			if ($this->encoding !== 'UTF-8') {
+				$csv->addStreamFilter('convert.iconv.' . $this->encoding . '/utf-8');
+			}
 
-            $csv->setHeaderOffset(0);
+			$csv->setHeaderOffset(0);
 			$csv->setDelimiter(';');
 		} catch (\Exception $e) {
 			$this->logger->error($e->getMessage());
@@ -142,32 +146,31 @@ abstract class AbstractSyncer
 
 	protected function logMemory()
 	{
-		$memory = number_format(memory_get_usage() / 1024 / 1024, 2);
-		$this->logger->info("Memory: {$memory}MB");
+		return number_format(memory_get_usage() / 1024 / 1024, 2);
 	}
 
-    protected function getOrNull(string $value, bool $forceValue = false): ?string
-    {
-        $value = htmlspecialchars($value, ENT_QUOTES);
+	protected function getOrNull(string $value, bool $forceValue = false): ?string
+	{
+		$value = htmlspecialchars($value, ENT_QUOTES);
 
-        if ($forceValue) {
-            return sprintf("'%s'", $value);
-        }
+		if ($forceValue) {
+			return sprintf("'%s'", $value);
+		}
 
-        return $value === '' ? "null" : sprintf("'%s'", $value);
-    }
+		return $value === '' ? "null" : sprintf("'%s'", $value);
+	}
 
-    private function submitBatch(array $batch): void
-    {
-        $bigSql = implode('', $batch);
-        try {
-            $this->entityManager->getConnection()->beginTransaction();
-            $this->entityManager->getConnection()->executeStatement($bigSql);
-            $this->entityManager->getConnection()->commit();
-        } catch (Exception $e) {
-            $this->logger->info($bigSql);
-            throw $e;
-        }
-    }
+	private function submitBatch(array $batch): void
+	{
+		$bigSql = implode('', $batch);
+		try {
+			$this->entityManager->getConnection()->beginTransaction();
+			$this->entityManager->getConnection()->executeStatement($bigSql);
+			$this->entityManager->getConnection()->commit();
+		} catch (Exception $e) {
+			$this->logger->info($bigSql);
+			throw $e;
+		}
+	}
 
 }

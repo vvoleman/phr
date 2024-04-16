@@ -25,9 +25,9 @@ class SyncerAllRunCommand extends Command
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$commands = [
-			'MKN syncer' => 'syncer:mkn:run',
 			'NRPZS syncer' => 'syncer:nrpzs:run',
 			'SUKL syncer' => 'syncer:sukl:run',
+			'MKN syncer' => 'syncer:mkn:run',
 		];
 
 		$io = new SymfonyStyle($input, $output);
