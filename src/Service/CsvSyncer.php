@@ -42,4 +42,20 @@ abstract class CsvSyncer
 		}
 	}
 
+	private static $topMemory = 0;
+
+	public static function setTopMemory(float $memory): void
+	{
+		self::$topMemory = max(self::$topMemory, $memory);
+	}
+
+	public static function clear() {
+		self::$topMemory = 0;
+	}
+
+	public static function getTopMemory(): float
+	{
+		return self::$topMemory;
+	}
+
 }

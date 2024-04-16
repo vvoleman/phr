@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\CsvSyncer;
 use App\Service\SUKL\Exception\SuklException;
 use App\Service\UZIS\LoadUZISFile;
 use App\Service\UZIS\UZISCsvSyncer;
@@ -29,10 +30,14 @@ class SyncerMknRunCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 		try {
+			$start = microtime(true);
 //			$this->zipFile->load();
+			CsvSyncer::clear();
 			$this->csvSyncer->sync();
 
-			$io->success("Data loaded successfully (duration: " . (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) . "s).");
+			$topMemory = CsvSyncer::getTopMemory();
+			$time = microtime(true) - $start;
+			$io->success(sprintf("Data loaded successfully (duration: %fs, peak memory: %fMB).", $time, $topMemory));
 		} catch (SuklException $e) {
 			$io->error($e->getMessage());
 			return Command::FAILURE;

@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\CsvSyncer;
 use App\Service\NRPZs\LoadNRPZSFile;
 use App\Service\NRPZs\NRPZSCsvSyncer;
 use League\Csv\Exception;
@@ -32,10 +33,12 @@ class SyncerNrpzsRunCommand extends Command
     {
 		$io = new SymfonyStyle($input, $output);
 		try {
-			$this->file->load();
+			$start = microtime(true);
+//			$this->zipFile->load();
 			$this->csvSyncer->sync();
 
-			$io->success("Data loaded successfully (duration: " . (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) . "s).");
+			$time = microtime(true) - $start;
+			$io->success(sprintf("Data loaded successfully (duration: %fs).", $time));
 		} catch (Exception $e) {
 			$io->error($e->getMessage());
 			return Command::FAILURE;
