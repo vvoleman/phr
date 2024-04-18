@@ -35,10 +35,12 @@ class SyncerNrpzsRunCommand extends Command
 		try {
 			$start = microtime(true);
 //			$this->zipFile->load();
+            CsvSyncer::clear();
 			$this->csvSyncer->sync();
 
-			$time = microtime(true) - $start;
-			$io->success(sprintf("Data loaded successfully (duration: %fs).", $time));
+            $topMemory = CsvSyncer::getTopMemory();
+            $time = microtime(true) - $start;
+            $io->success(sprintf("Data loaded successfully (duration: %fs, peak memory: %fMB).", $time, $topMemory));
 		} catch (Exception $e) {
 			$io->error($e->getMessage());
 			return Command::FAILURE;
