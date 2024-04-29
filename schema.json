@@ -1,0 +1,543 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "PHR",
+        "description": "API endpoints for PHR app. Developed as a part of a bachelor thesis by Vojt\u011bch Voleman.",
+        "version": "1.0.0"
+    },
+	"servers": [
+		{
+			"url": "http://localhost:9999",
+			"description": "Local server via Docker"
+		},
+		{
+			"url": "https://phr.vvoleman.eu",
+			"description": "Production server"
+
+		}
+	],
+    "paths": {
+        "/api/diagnose/list": {
+            "get": {
+                "tags": [
+                    "Diagnose"
+                ],
+                "summary": "Search diagnoses",
+                "description": "Search ICN-10 diagnoses by their ID. Returns an array of diagnoses.",
+                "operationId": "get_api_diagnose_search",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number, starts from 0",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 0
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "kotn\u00edk"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Order by attribute",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "name"
+                            ]
+                        },
+                        "example": "name"
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "Order direction",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "example": "asc"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns first 10 diagnoses found for given query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success"
+                                            ]
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ICD-10 code",
+                                                        "type": "string",
+                                                        "example": "W10"
+                                                    },
+                                                    "name": {
+                                                        "description": "Diagnose name",
+                                                        "type": "string",
+                                                        "example": "P\u00e1d na schodech a stupn\u00edch nebo z nich"
+                                                    },
+                                                    "parent": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "description": "ICD-10 parent group code",
+                                                                "type": "string",
+                                                                "example": "XX"
+                                                            },
+                                                            "name": {
+                                                                "description": "Parent group name",
+                                                                "type": "string",
+                                                                "example": "Stav souvisej\u00edc\u00ed se \u017eivotn\u00edm stylem"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Response given when missing \"search\" attribute",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Missing parameters"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/diagnose/multiple": {
+            "get": {
+                "tags": [
+                    "Diagnose"
+                ],
+                "summary": "Search diagnoses by multiple IDs",
+                "description": "Search ICN-10 diagnoses by multiple IDs. Returns an array of diagnoses.",
+                "operationId": "get_api_diagnose_multiple",
+                "parameters": [
+                    {
+                        "name": "ids[]",
+                        "in": "query",
+                        "description": "List of IDs to search for",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "example": [
+                            "W10",
+                            "W11"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns diagnoses for given IDs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success"
+                                            ]
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ICD-10 code",
+                                                        "type": "string",
+                                                        "example": "W10"
+                                                    },
+                                                    "name": {
+                                                        "description": "Diagnose name",
+                                                        "type": "string",
+                                                        "example": "P\u00e1d na schodech a stupn\u00edch nebo z nich"
+                                                    },
+                                                    "parent": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "description": "ICD-10 parent group code",
+                                                                "type": "string",
+                                                                "example": "XX"
+                                                            },
+                                                            "name": {
+                                                                "description": "Parent group name",
+                                                                "type": "string",
+                                                                "example": "Stav souvisej\u00edc\u00ed se \u017eivotn\u00edm stylem"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Response given when missing \"ids\" attribute",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Missing parameters"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/healthcare/list": {
+            "get": {
+                "tags": [
+                    "Healthcare"
+                ],
+                "summary": "Search medical facilities",
+                "description": "Search medical facilities. Returns an array of medical facilities.",
+                "operationId": "get_api_healthcare_list",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number, starts from 0",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 0
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Order by attribute",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "fullName",
+                                "city",
+                                "street",
+                                "activityStartedAt"
+                            ]
+                        },
+                        "example": "name"
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "Order direction",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "example": "asc"
+                    },
+                    {
+                        "name": "any",
+                        "in": "query",
+                        "description": "Search query in any field",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Krajsk\u00e1 zdravotn\u00ed"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of medical facilities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success"
+                                            ]
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {}
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/medical-product/list": {
+            "get": {
+                "tags": [
+                    "Medical products"
+                ],
+                "summary": "Search medical products",
+                "description": "Search medical products their ID or name. Returns an array of medical products.",
+                "operationId": "get_api_medical_product_list",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number, starts from 0",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 0
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ibalgin"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Order by attribute",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "name",
+                                "expiration_hours",
+                                "administration_method",
+                                "strength"
+                            ]
+                        },
+                        "example": "name"
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "Order direction",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "example": "asc"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns first 10 medical products found for given query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success"
+                                            ]
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ID",
+                                                        "type": "string",
+                                                        "example": "0000009"
+                                                    },
+                                                    "name": {
+                                                        "description": "Name",
+                                                        "type": "string",
+                                                        "example": "ACYLCOFFIN"
+                                                    },
+                                                    "packaging": {
+                                                        "properties": {
+                                                            "form": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "description": "Form ID",
+                                                                        "type": "string",
+                                                                        "example": "TBL NOB"
+                                                                    },
+                                                                    "name": {
+                                                                        "description": "Form name",
+                                                                        "type": "string",
+                                                                        "example": "Tableta"
+                                                                    },
+                                                                    "short_name": {
+                                                                        "description": "Form short name",
+                                                                        "type": "string",
+                                                                        "example": "Tableta"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "packaging": {
+                                                                "description": "Packaging",
+                                                                "type": "string",
+                                                                "example": "10"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "addition": {
+                                                        "description": "Product detail in one string",
+                                                        "type": "string",
+                                                        "example": "450MG/50MG TBL NOB 10"
+                                                    },
+                                                    "registrationHolder": {
+                                                        "description": "Registration holder",
+                                                        "type": "string",
+                                                        "example": "ZNB"
+                                                    },
+                                                    "recentlyDelivered": {
+                                                        "description": "Was medical product delivered in last 6 months?",
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "expirationHours": {
+                                                        "description": "Expiration hours",
+                                                        "type": "integer",
+                                                        "example": 25920
+                                                    },
+                                                    "country": {
+                                                        "description": "Country of origin",
+                                                        "type": "string",
+                                                        "example": "SLOVENSK\u00c1 REPUBLIKA"
+                                                    },
+                                                    "substances": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "description": "Substance ID",
+                                                                "type": "string"
+                                                            },
+                                                            "name": {
+                                                                "description": "Substance name",
+                                                                "type": "string"
+                                                            },
+                                                            "strength": {
+                                                                "description": "Substance strength",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Response given when missing \"search\" attribute",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Missing parameters"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

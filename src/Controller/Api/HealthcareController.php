@@ -5,6 +5,8 @@ namespace App\Controller\Api;
 use App\Controller\BaseApiController;
 use App\Entity\NRPZS\HealthcareFacility;
 use App\Exception\MissingParameterException;
+use App\OpenApi\ApiErrorResponse;
+use App\OpenApi\ApiSuccessResponse;
 use App\Service\Filter\Direction;
 use App\Service\Filter\Healthcare\HealthcareFilter;
 use App\Service\Filter\Healthcare\OrderBy;
@@ -14,12 +16,63 @@ use App\Service\Filter\Healthcare\SearchFilterModifier;
 use App\Service\Filter\PaginatorFilterModifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Attributes as OA;
 
-#[Route('/api/healthcare', name: 'api_healthcare_')]
 class HealthcareController extends BaseApiController
 {
 
-	#[Route('/list', name: 'list')]
+	#[Route('/api/healthcare/list', name: 'api_healthcare_list', methods: ['GET'])]
+	#[OA\Get(
+		description: 'Search medical facilities. Returns an array of medical facilities.',
+		summary: 'Search medical facilities',
+		tags: ['Healthcare'],
+	)]
+	#[OA\Parameter(
+		name: 'page',
+		description: 'Page number, starts from 0',
+		in: 'query',
+		required: false,
+		schema: new OA\Schema(
+			type: 'integer'
+		),
+		example: 0
+	)]
+	#[OA\Parameter(
+		name: 'order_by',
+		description: 'Order by attribute',
+		in: 'query',
+		required: false,
+		schema: new OA\Schema(
+			type: 'string', enum: ['id', 'fullName', 'city', 'street', 'activityStartedAt']
+		),
+		example: 'name'
+	)]
+	#[OA\Parameter(
+		name: 'direction',
+		description: 'Order direction',
+		in: 'query',
+		required: false,
+		schema: new OA\Schema(
+			type: 'string',enum: ['asc', 'desc']
+		),
+		example: 'asc'
+	)]
+	#[OA\Parameter(
+		name: 'any',
+		description: 'Search query in any field',
+		in: 'query',
+		required: false,
+		schema: new OA\Schema(
+			type: 'string'
+		),
+		example: 'Krajská zdravotní'
+	)]
+	#[ApiSuccessResponse(
+		description: 'List of medical facilities',
+		items: new OA\Items(
+			properties:[]
+		)
+	)]
 	public function list(HealthcareFilter $filter): JsonResponse
 	{
 		try {
@@ -49,12 +102,12 @@ class HealthcareController extends BaseApiController
 		if (isset($params["order_by"])) {
 			$orderBy = OrderBy::tryFrom($params["order_by"]);
 			if ($orderBy === null) {
-				return $this->error('Invalid order by, valid values are: ' . implode(', ', OrderBy::cases()));
+				return $this->error('Invalid order by');
 			}
 			if (isset($params["direction"])) {
-				$direction = Direction::tryFrom($params["direction"]);
+				$direction = Direction::tryFrom(strtoupper($params["direction"]));
 				if ($direction === null) {
-					return $this->error('Invalid direction, valid values are: ' . implode(', ', Direction::cases()));
+					return $this->error('Invalid direction');
 				}
 			} else {
 				$direction = Direction::ASC;
