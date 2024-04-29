@@ -5,7 +5,7 @@ namespace App\Service\Filter\MedicalProduct;
 
 enum OrderBy: string
 {
-
+	case ID = 'id';
 	case NAME = 'name';
 	case EXPIRATION = 'expiration_hours';
 	case ADMINISTRATION_METHOD = 'administration_method';
