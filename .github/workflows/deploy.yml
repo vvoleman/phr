@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main  # Change this to your main branch name if different
+      - deploy  # Change this to your main branch name if different
 
 jobs:
   deploy:
