@@ -80,7 +80,7 @@ class MedicalProduct implements ISerializable
 		return $this;
 	}
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
