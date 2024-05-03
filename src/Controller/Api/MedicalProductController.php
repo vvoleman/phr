@@ -8,14 +8,18 @@ use App\Entity\MedicalProduct;
 use App\Exception\MissingParameterException;
 use App\OpenApi\ApiErrorResponse;
 use App\OpenApi\ApiSuccessResponse;
+use App\Repository\MedicalProductRepository;
 use App\Service\Filter\Direction;
 use App\Service\Filter\MedicalProduct\MedicalProductFilter;
 use App\Service\Filter\MedicalProduct\OrderBy;
 use App\Service\Filter\MedicalProduct\OrderFilterModifier;
 use App\Service\Filter\MedicalProduct\SearchFilterModifier;
 use App\Service\Filter\PaginatorFilterModifier;
+use App\Service\SUKL\Exception\SuklException;
+use App\Service\SUKL\RetrieveProductDocument;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Attributes as OA;
 
@@ -54,7 +58,7 @@ class MedicalProductController extends BaseApiController
 		in: 'query',
 		required: false,
 		schema: new OA\Schema(
-			type: 'string',enum: ['id', 'name', 'expiration_hours', 'administration_method', 'strength']
+			type: 'string', enum: ['id', 'name', 'expiration_hours', 'administration_method', 'strength']
 		),
 		example: 'name'
 	)]
@@ -64,7 +68,7 @@ class MedicalProductController extends BaseApiController
 		in: 'query',
 		required: false,
 		schema: new OA\Schema(
-			type: 'string',enum: ['asc', 'desc']
+			type: 'string', enum: ['asc', 'desc']
 		),
 		example: 'asc'
 	)]
@@ -147,17 +151,60 @@ class MedicalProductController extends BaseApiController
 		return $this->send($products);
 	}
 
-	#[Route('/random', name: 'get', methods: ['GET'])]
-	public function random(EntityManagerInterface $manager): JsonResponse
+	#[Route('/api/medical-product/document', name: 'get', methods: ['GET'])]
+	#[OA\Get(
+		description: 'Get product document PDF by product ID. Redirects to the document URL. It works by retrieving document ID from SUKL page.',
+		summary: 'Get product document',
+		tags: ['Medical products'],
+	)]
+	#[OA\Parameter(
+		name: 'id',
+		description: 'Product ID',
+		in: 'query',
+		required: true,
+		schema: new OA\Schema(
+			type: 'string'
+		),
+		example: '0000009'
+	)]
+	#[ApiSuccessResponse(
+		description: 'Redirects to the document URL',
+		items: new OA\Items()
+	)]
+	#[ApiErrorResponse(
+		description: 'Response given when missing "id" attribute',
+		message: 'Missing parameters',
+	)]
+	public function productDocument(
+		MedicalProductRepository $repository,
+		RetrieveProductDocument  $retrieveProductDocument
+	): Response
 	{
-		$sql = "SELECT id FROM medical_product ORDER BY RAND() LIMIT 50";
-		$ids = $manager->getConnection()->fetchAllAssociative($sql);
-		$ids = array_map(fn(array $id) => $id["id"], $ids);
+		try {
+			$params = $this->getParams([
+				"id" => true
+			]);
+		} catch (MissingParameterException) {
+			return $this->error("Missing parameters");
+		}
 
-		$products = $manager->getRepository(MedicalProduct::class)->findBy(["id" => $ids]);
+		$product = $repository->find($params["id"]);
 
-		$products = array_map(fn(MedicalProduct $product) => $product->serialize(), $products);
-		return $this->send($products);
+		if ($product === null) {
+			return $this->error(sprintf("Product with ID %s not found", $params["id"]));
+		}
+
+		try {
+			$link = $retrieveProductDocument->getDocumentUrl($product);
+
+			if ($link === null) {
+				return $this->error("No document found for product ID: " . $params["id"]);
+			}
+
+			return $this->redirect($link);
+		} catch (SuklException) {
+			return $this->error("Unable to retrieve document URL");
+		}
 	}
 
 }
