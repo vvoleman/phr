@@ -4,12 +4,19 @@ namespace App\Service\SUKL\Syncers;
 
 use App\Entity\MedicalProduct;
 use App\Service\AbstractSyncer;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Psr\Log\LoggerInterface;
 
 class MedicalProductSyncer extends AbstractSyncer
 {
 
 	private const FILENAME = 'dlp_lecivepripravky.csv';
+
+	public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, string $csvPath, string $encoding = 'UTF-8')
+	{
+		parent::__construct($entityManager, $logger, $csvPath, $encoding);
+	}
 
 	public static function getDependencies(): array
 	{
