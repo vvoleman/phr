@@ -336,7 +336,7 @@ class MedicalProduct implements ISerializable
 			'registrationHolder' => $this->registrationHolder,
 			'recentlyDelivered' => $this->recentlyDelivered,
 			'expirationHours' => $this->expirationHours,
-			'country' => $this->countryHolder?->getName(),
+			'country' => $this->countryHolder?->getEdqmCode(),
 			'substances' => $substances,
 		];
 	}
