@@ -31,7 +31,7 @@ class SyncerMknRunCommand extends Command
         $io = new SymfonyStyle($input, $output);
 		try {
 			$start = microtime(true);
-//			$this->zipFile->load();
+			$this->zipFile->load();
 			CsvSyncer::clear();
 			$this->csvSyncer->sync();
 
