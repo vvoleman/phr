@@ -4,8 +4,6 @@ RUN apt-get update
 RUN apt-get install -y libzip-dev zip cron
 RUN docker-php-ext-install mysqli pdo pdo_mysql zip
 
-RUN groupadd -r mysql && useradd -r -g mysql mysql
-
 # Copy crontab
 COPY ./docker/crontab /etc/cron.d/crontab
 RUN chmod 0644 /etc/cron.d/crontab
