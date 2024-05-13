@@ -28,8 +28,6 @@ services:
             - "${MYSQL_PUBLIC_PORT}:3306"
         networks:
             - default
-        volumes:
-            - ./db_data:/var/lib/mysql
 #        volumes:
 #            - .docker/setup.sql:/docker-entrypoint-initdb.d/setup.sql
         env_file:
