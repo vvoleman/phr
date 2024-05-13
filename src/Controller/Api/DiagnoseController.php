@@ -103,7 +103,7 @@ class DiagnoseController extends BaseApiController
 		};
 
 		$page = (int)($params["page"] ?? 0);
-		$search = $params["search"];
+		$search = $params["search"] ?? "";
 
 		$diagnoses = $repository->search($search, $page, $sortBy, $direction);
 		$mapped = array_map(function ($diagnose) {
