@@ -34,7 +34,7 @@ class SyncerNrpzsRunCommand extends Command
 		$io = new SymfonyStyle($input, $output);
 		try {
 			$start = microtime(true);
-//			$this->zipFile->load();
+			$this->file->load();
             CsvSyncer::clear();
 			$this->csvSyncer->sync();
 
