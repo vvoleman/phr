@@ -110,13 +110,27 @@ Error: Allowed memory size of 134217728 bytes exhausted (tried to allocate 23371
 `
 dochází ve vývojářském prostředí, jelikož se Doctrine snaží loggovat všechny dotazy. Řešením je buď přepnout prostředí
 do produkčního v `.env`
+
 ```dotenv
 # APP_ENV=dev
 APP_ENV=prod
 ```
+
 nebo spouštět příkazy s parametrem `--no-debug`:
+
 ```shell
 php bin/console syncer:all:run --no-debug
 ```
+
+### Chyba při spouštění dotazů v dokumentaci API
+
+Pokud se při spuštění dotazů v dokumentaci API objeví chyba `Failed to fetch`, zkontrolujte na jaký server je dotaz
+odesílán. Dokumentace obsahuje dva servery, jeden pro lokální spuštění a druhý pro produkční. Toto nastavení lze nalést
+na začátku stránky s popiskem "Servers".
+V případě, že by nedošlo k vyřešení problému, kontaktujte prosím autora. Je možné, že došlo k výpadku serveru.
+
+**Poznámka:** Endpoint `/api/medical-product/document` přesměrovává na stránku s příbalovým letákem léku. Dokumentace ale
+zobrazí jen chybovou hlášku. Jedná se o očekávané chování. Pro testování funkčnosti je možné přistoupit na vygenerovaný
+Request URL manuálně z prohlížeče.
 
 
