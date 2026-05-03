@@ -2,6 +2,7 @@ FROM php:8.1.1-apache
 
 RUN apt-get update
 RUN apt-get install -y libzip-dev zip cron
+RUN apt-get install -y ca-certificates && update-ca-certificates
 RUN docker-php-ext-install mysqli pdo pdo_mysql zip
 
 # Copy crontab
