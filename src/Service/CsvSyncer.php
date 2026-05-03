@@ -12,6 +12,8 @@ abstract class CsvSyncer
 
 	use LoggerTrait;
 
+    static array $additional = [];
+
 	public function __construct(private readonly EntityManagerInterface $entityManager) { }
 
 	/**
@@ -25,6 +27,8 @@ abstract class CsvSyncer
 
 	public function sync(): void
 	{
+        self::$additional = [];
+
 		/** @var array<AbstractSyncer> $syncers */
 		$syncers = 	$this->getSyncers();
 

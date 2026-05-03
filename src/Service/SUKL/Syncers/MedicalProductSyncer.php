@@ -4,6 +4,7 @@ namespace App\Service\SUKL\Syncers;
 
 use App\Entity\MedicalProduct;
 use App\Service\AbstractSyncer;
+use App\Service\SUKL\SUKLCsvSyncer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Psr\Log\LoggerInterface;
@@ -44,11 +45,13 @@ class MedicalProductSyncer extends AbstractSyncer
 	 */
 	protected function handleRow(array $row, EntityRepository $repository): string
 	{
+        $kodSukl = $this->getOrNull($row['KOD_SUKL'], true);
+
 		$sql = sprintf("INSERT INTO medical_product 
             (id, name, strength, packaging, addition, registration_holder, recently_delivered, expiration_hours, form_id, administration_method_id, wrapping_id, country_holder_id, registration_status_id, indication_group_id, dispensing_id, addiction_id, doping_id, document_id ) 
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s ) 
             ON DUPLICATE KEY UPDATE name = VALUES(name), strength = VALUES(strength), packaging = VALUES(packaging), addition = VALUES(addition), registration_holder = VALUES(registration_holder), recently_delivered = VALUES(recently_delivered), expiration_hours = VALUES(expiration_hours), form_id = VALUES(form_id), administration_method_id = VALUES(administration_method_id), wrapping_id = VALUES(wrapping_id), country_holder_id = VALUES(country_holder_id), registration_status_id = VALUES(registration_status_id), indication_group_id = VALUES(indication_group_id), dispensing_id = VALUES(dispensing_id), addiction_id = VALUES(addiction_id), doping_id = VALUES(doping_id), document_id = VALUES(document_id);",
-			$this->getOrNull($row['KOD_SUKL'], true),
+            $kodSukl,
 			$this->getOrNull($row['NAZEV'], true),
 			$this->getOrNull($row['SILA'], true),
 			$this->getOrNull($row['BALENI'], true),
@@ -65,7 +68,7 @@ class MedicalProductSyncer extends AbstractSyncer
 			$this->getOrNull($row['VYDEJ']),
 			$this->getOrNull($row['ZAV']),
 			$this->getOrNull($row['DOPING']),
-			$this->getOrNull($row['KOD_SUKL'])
+			array_key_exists($kodSukl,SUKLCsvSyncer::$additional) ? $kodSukl : "null"
 		);
 
 		if ($row['LL'] !== null && $row['LL'] !== '') {
